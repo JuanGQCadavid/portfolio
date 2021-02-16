@@ -1,0 +1,36 @@
+name: Dart
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    container:
+      image: cirrusci/flutter
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - name: Install dependencies
+        run:  |
+          cd ./portfolio_flutter_app 
+          dart pub get
+
+      - name: Building Flutter web
+        run:  |
+          cd ./portfolio_flutter_app 
+          flutter build web
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: portfolio_flutter_app/build/web # The folder the action should deploy.
